@@ -3,13 +3,20 @@
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<title>Mikael Ahonen — Pyramid Farm</title>
+		<title>Mikael Ahonen — Automation Student &amp; Luau Client Dev</title>
 		<meta
 			name="description"
-			content="Pyramid Farm: a Roblox Luau automation client with a native sidebar HUD. Source and build notes by Mikael Ahonen."
+			content="Mikael Ahonen (mikael-a), 16, first-year electrical and industrial automation student at Tredu in Tampere. Pyramid Farm: a Luau client with a native sidebar HUD."
 		/>
+		<meta name="author" content="Mikael Ahonen" />
 		<meta name="color-scheme" content="dark" />
 		<meta name="theme-color" content="#090d16" />
+		<meta property="og:type" content="website" />
+		<meta property="og:title" content="Mikael Ahonen — Pyramid Farm" />
+		<meta
+			property="og:description"
+			content="Automation student in Tampere. Luau client, native HUD, no loader fluff."
+		/>
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link
@@ -17,140 +24,583 @@
 			rel="stylesheet"
 		/>
 		<link rel="stylesheet" href="style.css" />
+		<link
+			rel="icon"
+			href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23090d16'/%3E%3Cpath d='M16 7l7.5 13h-15z' fill='none' stroke='%237aa2f7' stroke-width='1.8' stroke-linejoin='round'/%3E%3C/svg%3E"
+		/>
 	</head>
 
 	<body>
-		<header class="masthead">
-			<div class="wrap masthead__inner">
-				<div class="brand">
-					<span class="brand__name">Mikael Ahonen</span>
-					<span class="brand__handle">@kr10x723</span>
-				</div>
-				<div class="masthead__meta">
-					<span class="status">
-						<span class="dot" aria-hidden="true"></span>
+		<div class="progress" id="progress" aria-hidden="true"></div>
+
+		<a class="vh" href="#about">Skip to content</a>
+
+		<header class="top">
+			<div class="shell top__in">
+				<a class="id" href="#top">
+					<span class="id__name">Mikael Ahonen</span>
+					<span class="id__handle">@mikael-a</span>
+				</a>
+
+				<nav class="nav" aria-label="Sections">
+					<a href="#about">about</a>
+					<a href="#focus">focus</a>
+					<a href="#rig">setup</a>
+					<a href="#build">build</a>
+					<a href="#work">client</a>
+					<a href="#contact">contact</a>
+				</nav>
+
+				<div class="top__end">
+					<span class="loc">
+						<span class="beacon" aria-hidden="true"></span>
 						Tampere, FI
 					</span>
-					<span class="clock" aria-label="Current UTC time and date">
-						<b id="utc-clock">--:--:--</b> <span id="utc-date">UTC</span>
+					<span class="clocks" aria-label="UTC and Helsinki local time">
+						<span class="k">utc</span>
+						<span class="utc" id="utc-clock">--:--:--</span>
+						<span class="local" id="local-clock">--:--</span>
 					</span>
 				</div>
 			</div>
 		</header>
 
-		<main class="wrap">
-			<section class="hero" data-reveal>
-				<h1>Pyramid Farm <span>/ luau</span></h1>
-				<p>
-					A client-side automation layer for a Roblox quarry-and-pyramid loop. It reads
-					state from the game's own replicated services, resolves placement slots, and
-					drops a draggable sidebar HUD on top — no executor warnings, no loader
-					nonsense, just the module.
-				</p>
-				<div class="hero__actions">
-					<a class="btn" href="#source">Jump to source</a>
-					<a class="btn" href="#design">Design notes</a>
-					<a class="btn" href="#spec">Spec</a>
+		<main id="top">
+			<!-- ============================ hero ============================ -->
+			<section class="hero">
+				<div class="shell">
+					<div class="eyebrow" data-reveal="0">
+						<span class="live">available</span>
+						<span class="sep">/</span>
+						<span id="utc-date">—</span>
+						<span class="sep">/</span>
+						<span>helsinki&nbsp;utc+2</span>
+					</div>
+
+					<h1 data-reveal="1">
+						Automation student.<br />
+						<em>Writes clients</em> <span class="thin">that hold up.</span>
+					</h1>
+
+					<p class="hero__lede" data-reveal="2">
+						I'm Mikael — <strong><span id="age-live">16</span>, first year</strong> of
+						electrical and industrial automation at Tredu's Pyynikki campus in
+						Tampere. Weekdays are PLC panels, sensors and wiring diagrams.
+						Weekends are Luau: game clients, framework internals, and dark UIs that
+						don't waste a frame. This page is one of them.
+					</p>
+
+					<div class="hero__acts" data-reveal="3">
+						<a class="btn btn--primary" href="#work">
+							<svg viewBox="0 0 24 24" aria-hidden="true">
+								<path d="M9 18l-6-6 6-6M15 6l6 6-6 6" />
+							</svg>
+							Read the client
+						</a>
+						<a class="btn" href="#build">
+							<svg viewBox="0 0 24 24" aria-hidden="true">
+								<path d="M12 4v16M4 12h16" />
+							</svg>
+							How it works
+						</a>
+						<a class="btn" href="https://github.com/kr10x723/pyramid-farm-showcase">
+							<svg viewBox="0 0 24 24" aria-hidden="true">
+								<path
+									d="M9 19c-4 1.4-4-2.5-6-3m12 5v-3.9a3.4 3.4 0 00-.9-2.6c3-.3 6.2-1.5 6.2-6.7A5.2 5.2 0 0018 3.3a4.8 4.8 0 00-.1-3.6s-1.1-.3-3.6 1.4a12.3 12.3 0 00-6.6 0C5.1-.6 4 .3 4 .3A4.8 4.8 0 003.9 3.9 5.2 5.2 0 003 7.8c0 5.2 3.2 6.4 6.2 6.7a3.4 3.4 0 00-.9 2.6V20"
+								/>
+							</svg>
+							Repository
+						</a>
+					</div>
+
+					<dl class="strip" data-reveal="4">
+						<div>
+							<dt>Program</dt>
+							<dd class="v">Sähkö- ja otomaatioala <small>· yr 1</small></dd>
+						</div>
+						<div>
+							<dt>Base</dt>
+							<dd class="v">Tampere <small>· Härmälä</small></dd>
+						</div>
+						<div>
+							<dt>Languages</dt>
+							<dd class="v">FI <small>· EN B2+ · SV basic</small></dd>
+						</div>
+						<div>
+							<dt>Contact</dt>
+							<dd class="v">GitHub / Discord <small>· short answers</small></dd>
+						</div>
+					</dl>
 				</div>
 			</section>
 
-			<section id="spec" data-reveal>
-				<dl class="facts">
-					<div class="fact">
-						<dt>Author</dt>
-						<dd>Mikael Ahonen <span>· 16</span></dd>
-					</div>
-					<div class="fact">
-						<dt>Base</dt>
-						<dd>Tredu <span>· E&amp;IA</span></dd>
-					</div>
-					<div class="fact">
-						<dt>Language</dt>
-						<dd>Luau <span>· Luau 5.1 dialect</span></dd>
-					</div>
-					<div class="fact">
-						<dt>Build</dt>
-						<dd>gui-v8-holdplace</dd>
-					</div>
-				</dl>
-			</section>
-
-			<section class="section" id="design" data-reveal>
-				<div class="section__head">
-					<h2>Design notes</h2>
-					<span class="tag">how it holds together</span>
-				</div>
-				<ul class="features">
-					<li>
-						<span class="k">01</span>
-						<span class="v">
-							<b>Canonical state.</b> Carry count is polled through
-							<code>CarryState.read</code> with a 250&nbsp;ms cache, falling back to
-							the encoded <code>CarryState</code> attribute.
-						</span>
-					</li>
-					<li>
-						<span class="k">02</span>
-						<span class="v">
-							<b>Two placement paths.</b> If the interaction runtime exposes
-							<code>beginPlaceHold</code>, it drives a continuous hold; otherwise it
-							falls back to per-slot RPC calls with a cached slot index.
-						</span>
-					</li>
-					<li>
-						<span class="k">03</span>
-						<span class="v">
-							<b>Never assumes.</b> Every service lookup, module require and RPC is
-							wrapped — a missing module degrades to a status string instead of an
-							error.
-						</span>
-					</li>
-					<li>
-						<span class="k">04</span>
-						<span class="v">
-							<b>Window awareness.</b> The multiplier pool is tracked as a live
-							timer; the loop parks in it while active and resumes the farm when it
-							closes.
-						</span>
-					</li>
-					<li>
-						<span class="k">05</span>
-						<span class="v">
-							<b>Legible HUD.</b> Status, carry, collected, pool and a rolling
-							tapeless three-line log — all repainted on Heartbeat.
-						</span>
-					</li>
-					<li>
-						<span class="k">06</span>
-						<span class="v">
-							<b>Drag &amp; collapse.</b> The sidebar clamps to the viewport on drag and
-							folds to its 52&nbsp;px header so it never blocks the viewport.
-						</span>
-					</li>
-				</ul>
-			</section>
-
-			<section class="section" id="source" data-reveal>
-				<div class="section__head">
-					<h2>Source</h2>
-					<span class="tag">pyramid-farm.luau</span>
-					<span class="spacer" id="line-count"></span>
+			<!-- ============================ about ============================ -->
+			<section class="sec shell" id="about">
+				<div class="sec__rail" data-reveal="0">
+					<div class="sec__num">01 / about</div>
+					<h2>Who you're looking at</h2>
+					<p>
+						Short version up top, details if you actually care.
+					</p>
 				</div>
 
-				<div class="viewer">
-					<div class="viewer__bar">
-						<span class="viewer__file">
-							<span class="glyph" aria-hidden="true">◆</span>
-							<b>pyramid-farm.luau</b>
-						</span>
-						<span class="viewer__actions">
-							<span class="scroll-hint" id="scroll-hint">scroll</span>
-							<button class="btn btn--sm" id="copy-btn" type="button">
-								<span>Copy</span>
-							</button>
-						</span>
+				<div class="sec__body">
+					<div class="prose" data-reveal="1">
+						<p>
+							I'm a 16-year-old vocational student in Tampere, Finland. First
+							year of <strong>Sähkö- ja otomaatioala</strong> — electrical and
+							industrial automation technology — at Tredu, Pyynikki campus. My
+							weekday is panels, contactors, sensors and PLC programs; my
+							weeknight is Lua and dark interfaces.
+						</p>
+						<p>
+							I'm not going to tell you I "revolutionise" anything. I like things
+							that work, load fast, and don't phone home. If a feature works, I
+							don't decorate it. If code runs, I don't rewrite it for style points.
+							Most of what I publish is the actual file, unmodified, because a
+							repo that only shows screenshots is a brochure, not work.
+						</p>
+						<p>
+							On the internet I'm <strong>mikael-a</strong>. No X, no Instagram
+							posts — a private account for school friends and that's it. Discord
+							as <code>mikael_a</code>, mostly lurking in script channels. On GitHub
+							you'll find Luau clients and framework spelunking. If you ask me
+							something technical, I'll answer it directly. I won't pad the reply.
+						</p>
 					</div>
-					<pre class="code" id="code-scroll" tabindex="0"><code id="source"><span class="row"> </span>
+
+					<div class="note" data-reveal="2">
+						<b>Note on the aesthetic:</b> no neon gradients, no "AI slop" hero
+						sections, no fake testimonials. A hairline grid, one accent, and a
+						readable code block. Everything here is hand-written CSS — 0&nbsp;KB of
+						framework.
+					</div>
+
+					<dl class="dl" data-reveal="3">
+						<div>
+							<dt>Full name</dt>
+							<dd>Mikael "Mika" Ahonen</dd>
+						</div>
+						<div>
+							<dt>Born</dt>
+							<dd>
+								14 March 2010 <span class="mut">· <span class="age">16</span> years old</span>
+							</dd>
+						</div>
+						<div>
+							<dt>Residence</dt>
+							<dd>
+								Tampere, Finland <span class="mut">· apartment near Härmälä</span>
+							</dd>
+						</div>
+						<div>
+							<dt>School</dt>
+							<dd>
+								Tredu, Pyynikki campus <span class="mut">· Tampere Vocational College</span>
+							</dd>
+						</div>
+						<div>
+							<dt>Field</dt>
+							<dd>
+								Electrical &amp; Industrial Automation Technology
+								<span class="mut">· 1st year student</span>
+							</dd>
+						</div>
+						<div>
+							<dt>Languages</dt>
+							<dd>
+								Finnish <span class="mut">native</span> · English
+								<span class="mut">B2+, technical</span> · Swedish
+								<span class="mut">school level</span>
+							</dd>
+						</div>
+						<div>
+							<dt>Build</dt>
+							<dd>1.78 m, on the lean side. Classic Nerd posture. Dark blond, blue-grey eyes.</dd>
+						</div>
+						<div>
+							<dt>Uniform</dt>
+							<dd>
+								Charcoal hoodie, plain tee, work trousers. Safety boots and a navy
+								Tredu-branded jacket in the workshop.
+							</dd>
+						</div>
+						<div>
+							<dt>Humor</dt>
+							<dd>Dry, Nordic, mostly ironic. Yes, it's intentional.</dd>
+						</div>
+					</dl>
+				</div>
+			</section>
+
+			<!-- ============================ focus ============================ -->
+			<section class="sec shell" id="focus">
+				<div class="sec__rail" data-reveal="0">
+					<div class="sec__num">02 / focus</div>
+					<h2>Two tracks, one mindset</h2>
+					<p>
+						Same brain, different voltage.
+					</p>
+				</div>
+
+				<div class="sec__body">
+					<div class="split" data-reveal="1">
+						<div class="panel">
+							<header>
+								Weekdays · Tredu
+								<span class="pill">physical</span>
+							</header>
+							<ul>
+								<li>
+									<span class="b">PLC</span>
+									<span>Programming ladder &amp; structured text, diagnostics</span>
+								</li>
+								<li>
+									<span class="b">Panels</span>
+									<span>Assembly, wiring, terminal blocks, labelling</span>
+								</li>
+								<li>
+									<span class="b">Sensors</span>
+									<span>Proximity, photo-eye, inductive — wiring &amp; tuning</span>
+								</li>
+								<li>
+									<span class="b">Circuits</span>
+									<span>Relays, contactors, 24 V DC control loops</span>
+								</li>
+								<li>
+									<span class="b">Safety</span>
+									<span>E-stop circuits, guarding, workshop discipline</span>
+								</li>
+							</ul>
+						</div>
+
+						<div class="panel">
+							<header>
+								Nights · Weekend
+								<span class="pill">software</span>
+							</header>
+							<ul>
+								<li>
+									<span class="b">Luau</span>
+									<span>Game clients, state polling, remote-aware loops</span>
+								</li>
+								<li>
+									<span class="b">Knit</span>
+									<span>Framework internals, service lifecycle, remotes</span>
+								</li>
+								<li>
+									<span class="b">Web</span>
+									<span>Minimal dark UIs — this page is the reference</span>
+								</li>
+								<li>
+									<span class="b">Perf</span>
+									<span>Heartbeat budgets, avoiding per-frame allocation</span>
+								</li>
+								<li>
+									<span class="b">Games</span>
+									<span>CS2 or Valheim with friends, occasionally</span>
+								</li>
+							</ul>
+						</div>
+					</div>
+
+					<div class="cards" data-reveal="2">
+						<div class="card">
+							<div class="k">engineering brain</div>
+							<h3>If it works, don't decorate it</h3>
+							<p>
+								Same rule in a cabinet and in a codebase. <b>Works, is legible,
+								doesn't leak</b> — that's the whole bar.
+							</p>
+						</div>
+						<div class="card">
+							<div class="k">communication</div>
+							<h3>Short, direct, on topic</h3>
+							<p>
+								Discord or GitHub, one to three lines. <b>No marketing voice</b>, no
+								"revolutionary", no "cutting-edge".
+							</p>
+						</div>
+						<div class="card">
+							<div class="k">taste</div>
+							<h3>Obsidian, hairlines, mono</h3>
+							<p>
+								One accent, a 1px grid, Inter plus JetBrains Mono. <b>Restraint
+								reads as competence</b> — clutter reads as noise.
+							</p>
+						</div>
+						<div class="card">
+							<div class="k">shipping</div>
+							<h3>The file, not the mockup</h3>
+							<p>
+								A repo with screenshots is marketing. <b>A repo with the source is
+								evidence.</b> This one is the source.
+							</p>
+						</div>
+					</div>
+
+					<div class="stack" data-reveal="3" aria-label="Tools and interests">
+						<span><i>▸</i>Luau</span>
+						<span><i>▸</i>Roblox</span>
+						<span><i>▸</i>Knit</span>
+						<span><i>▸</i>Vanilla JS</span>
+						<span><i>▸</i>CSS Grid</span>
+						<span><i>▸</i>Siemens LOGO!</span>
+						<span><i>▸</i>Automation Studio</span>
+						<span><i>▸</i>PLC ladder</span>
+						<span><i>▸</i>Linux / Arch</span>
+						<span><i>▸</i>Git</span>
+						<span><i>▸</i>Figma</span>
+						<span><i>▸</i>KiCad</span>
+					</div>
+				</div>
+			</section>
+
+			<!-- ============================ rig ============================ -->
+			<section class="sec shell" id="rig">
+				<div class="sec__rail" data-reveal="0">
+					<div class="sec__num">03 / setup</div>
+					<h2>Where it happens</h2>
+					<p>
+						Small, tidy room in Tampere. Cables taped where they have to be, not
+						where they look nice.
+					</p>
+				</div>
+
+				<div class="sec__body">
+					<div class="rig" data-reveal="1">
+						<div class="rig__desk">
+							<div class="rig__slot">
+								<div class="label">Display</div>
+								<div class="item">
+									<div class="nm">Dell 1080p, portrait</div>
+									<div class="ds">vertical · code reading</div>
+								</div>
+								<div class="item">
+									<div class="nm">Secondary panel</div>
+									<div class="ds">landscape · docs &amp; remotes</div>
+								</div>
+							</div>
+							<div class="rig__slot">
+								<div class="label">Input</div>
+								<div class="item">
+									<div class="nm">Mechanical keyboard</div>
+									<div class="ds">silent tactile switches</div>
+								</div>
+								<div class="item">
+									<div class="nm">Worn headphones</div>
+									<div class="ds">wired + wireless mix</div>
+								</div>
+							</div>
+							<div class="rig__slot">
+								<div class="label">Hardware</div>
+								<div class="item">
+									<div class="nm">ThinkPad · dark grey</div>
+									<div class="ds">second-hand · small Arch sticker</div>
+								</div>
+								<div class="item">
+									<div class="nm">Bench corner</div>
+									<div class="ds">multimeter · soldering irons · automation relays</div>
+								</div>
+							</div>
+						</div>
+						<div class="rig__foot">
+							<span class="tagx">synthwave</span>
+							<span class="tagx">ambient</span>
+							<span class="tagx">spotify</span>
+							<span class="tagx">closed account, private instagram</span>
+							<span class="tagx">no x / twitter</span>
+							<span class="tagx">classic black backpack</span>
+						</div>
+					</div>
+
+					<div class="cards" data-reveal="2">
+						<div class="card">
+							<div class="k">daily carry</div>
+							<h3>Boring on purpose</h3>
+							<p>
+								Plain tee, hoodie, work jeans, safety boots in the workshop.
+								<b>No brand fixation.</b> Nothing to coordinate.
+							</p>
+						</div>
+						<div class="card">
+							<div class="k">unwind</div>
+							<h3>CS2, Valheim, noise</h3>
+							<p>
+								Occasional games with friends. <b>Dark synthwave or ambient</b>
+								while the terminal does its thing.
+							</p>
+						</div>
+						<div class="card">
+							<div class="k">desk rule</div>
+							<h3>Practical over pretty</h3>
+							<p>
+								One corner for the multimeter and relays, one for the laptop.
+								<b>Tape, don't hide.</b>
+							</p>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<!-- ============================ build ============================ -->
+			<section class="sec shell" id="build">
+				<div class="sec__rail" data-reveal="0">
+					<div class="sec__num">04 / build</div>
+					<h2>Pyramid Farm, in the open</h2>
+					<p>
+						The reason this page exists. Full file below, no redactions.
+					</p>
+				</div>
+
+				<div class="sec__body">
+					<div class="prose" data-reveal="1">
+						<p>
+							<strong>Pyramid Farm</strong> is a client for a Roblox quarry-and-pyramid
+							loop. It polls the game's own replicated state, resolves a valid
+							placement slot next to the player, carries books over, and places them.
+							Then it draws a sidebar HUD so you can see what it's doing without
+							leaving the game.
+						</p>
+						<p>
+							The interesting part isn't the loop — it's the <code>pcall</code>
+							discipline. Every service lookup, module require and remote call is
+							guarded. If the game updates and a module moves, the client degrades
+							to a status string instead of erroring into the void.
+						</p>
+					</div>
+
+					<div class="cards" data-reveal="2">
+						<div class="card card--num">
+							<div class="n">01</div>
+							<h3>Canonical state</h3>
+							<p>
+								Carry count goes through <b>CarryState.read</b> with a 250&nbsp;ms
+								cache, falling back to the encoded <code>CarryState</code> attribute.
+								One source of truth, never two.
+							</p>
+						</div>
+						<div class="card card--num">
+							<div class="n">02</div>
+							<h3>Two placement paths</h3>
+							<p>
+								If the interaction runtime exposes <b>beginPlaceHold</b> it drives a
+								continuous hold; otherwise it falls back to per-slot RPCs with a
+								cached slot index.
+							</p>
+						</div>
+						<div class="card card--num">
+							<div class="n">03</div>
+							<h3>Never assumes</h3>
+							<p>
+								Services, modules and RPCs are all wrapped. <b>A missing module is a
+								status string</b>, not a crash.
+							</p>
+						</div>
+						<div class="card card--num">
+							<div class="n">04</div>
+							<h3>Window awareness</h3>
+							<p>
+								The multiplier pool is tracked as a live timer. The loop <b>parks in
+								it</b> while active, resumes the farm when it closes.
+							</p>
+						</div>
+						<div class="card card--num">
+							<div class="n">05</div>
+							<h3>Legible HUD</h3>
+							<p>
+								Status, carry, collected, pool and a rolling three-line log — all
+								repainted on <b>Heartbeat</b>, no per-frame allocation.
+							</p>
+						</div>
+						<div class="card card--num">
+							<div class="n">06</div>
+							<h3>Drag &amp; collapse</h3>
+							<p>
+								The sidebar clamps to the viewport on drag and <b>folds to its
+								52&nbsp;px header</b> so it never eats the screen.
+							</p>
+						</div>
+					</div>
+
+					<div class="tl" data-reveal="3">
+						<div class="tl__item">
+							<div class="tl__when">state polling → pooled → looped</div>
+							<div class="tl__what"><b>Pick phase</b> → place phase</div>
+							<div class="tl__note">
+								The outer loop reads carry, checks pyramid completion, then
+								dispatches. Cheap check, one branch.
+							</div>
+						</div>
+						<div class="tl__item">
+							<div class="tl__when">every heartbeat</div>
+							<div class="tl__what"><b>Repaint</b> five labels, three log lines</div>
+							<div class="tl__note">
+								Cheap by design. If repainting cost more than the work it reported,
+								the HUD would be the bug.
+							</div>
+						</div>
+						<div class="tl__item is-now">
+							<div class="tl__when">current build</div>
+							<div class="tl__what"><b>gui-v8-holdplace</b></div>
+							<div class="tl__note">
+								Hold-based placement is the active path. RPC fallback retained
+								for older runtimes.
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+
+			<!-- ============================ source ============================ -->
+			<section class="sec shell" id="work">
+				<div class="sec__rail" data-reveal="0">
+					<div class="sec__num">05 / source</div>
+					<h2>The whole file</h2>
+					<p>
+						972 lines, unmodified. Search it, wrap it, copy it.
+					</p>
+				</div>
+
+				<div class="sec__body">
+					<div class="viewer" data-reveal="1">
+						<div class="vw__bar">
+							<span class="vw__file">
+								<b>pyramid-farm.luau</b>
+								<span class="chip">luau</span>
+								<span class="chip">client</span>
+							</span>
+							<span class="vw__tools">
+								<span class="hint" id="scroll-hint">scroll</span>
+								<span class="vw__search">
+									<svg viewBox="0 0 24 24" aria-hidden="true">
+										<circle cx="11" cy="11" r="7" />
+										<path d="M20 20l-4.2-4.2" />
+									</svg>
+									<input
+										id="code-search"
+										type="search"
+										placeholder="find in file"
+										aria-label="Find in file"
+										autocomplete="off"
+										spellcheck="false"
+									/>
+									<kbd>/</kbd>
+								</span>
+								<button class="tgl" id="wrap-btn" type="button" aria-pressed="false">
+									wrap
+								</button>
+								<button class="tgl" id="copy-btn" type="button"><span>copy</span></button>
+							</span>
+						</div>
+
+						<div class="vw__stats">
+						<span id="vw-stats"></span>
+						<span class="spacer"></span>
+						<span id="vw-hits"></span>
+					</div>
+
+						<pre class="code" id="code-scroll" tabindex="0"><code id="source"><span class="row"> </span>
 <span class="row"><span class="t-kw">local</span> Players <span class="t-op">=</span> game:<span class="t-fn">GetService</span>(<span class="t-str">"Players"</span>)</span>
 <span class="row"><span class="t-kw">local</span> ReplicatedStorage <span class="t-op">=</span> game:<span class="t-fn">GetService</span>(<span class="t-str">"ReplicatedStorage"</span>)</span>
 <span class="row"><span class="t-kw">local</span> RunService <span class="t-op">=</span> game:<span class="t-fn">GetService</span>(<span class="t-str">"RunService"</span>)</span>
@@ -1122,14 +1572,117 @@
 <span class="row">	cleanup <span class="t-op">=</span> cleanup,</span>
 <span class="row">}</span>
 <span class="row"><span class="t-fn">print</span>(<span class="t-str">"[PyramidFarm] gui-v8-holdplace: ready"</span>)</span></code></pre>
+					</div>
+
+					<div class="note" data-reveal="2">
+						<b>Fair warning:</b> this is a client for someone else's game. If you
+						use it, that's between you and Roblox's ToS, not between you and me. I've
+						published it because the code is the interesting part — not as an
+						invitation.
+					</div>
+				</div>
+			</section>
+
+			<!-- ============================ contact ============================ -->
+			<section class="sec shell" id="contact">
+				<div class="sec__rail" data-reveal="0">
+					<div class="sec__num">06 / contact</div>
+					<h2>Reach me</h2>
+					<p>GitHub or Discord. Expect short answers.</p>
+				</div>
+
+				<div class="sec__body">
+					<div class="prose" data-reveal="1">
+						<p>
+							Questions about a specific line, a bug in something I wrote, or a
+							Luau pattern you want a second opinion on — go ahead. School project
+							advice: also fine. I don't answer DMs from accounts selling things.
+						</p>
+					</div>
+
+					<div class="links" data-reveal="2">
+						<a
+							class="link"
+							href="https://github.com/kr10x723/pyramid-farm-showcase"
+						>
+							<span class="link__ic" aria-hidden="true">
+								<svg viewBox="0 0 24 24">
+									<path
+										d="M12 2a10 10 0 00-3.16 19.49c.5.09.68-.22.68-.48l-.01-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.9-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.5 9.5 0 015 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.94.36.31.68.92.68 1.85l-.01 2.75c0 .27.18.58.69.48A10 10 0 0012 2z"
+									/>
+								</svg>
+							</span>
+							<span class="link__tx">
+								<b>GitHub</b>
+								<span>@kr10x723</span>
+							</span>
+							<span class="link__arw" aria-hidden="true">
+								<svg viewBox="0 0 24 24">
+									<path d="M7 17L17 7M9 7h8v8" />
+								</svg>
+							</span>
+						</a>
+
+						<a class="link" href="https://github.com/kr10x723/pyramid-farm-showcase">
+							<span class="link__ic" aria-hidden="true">
+								<svg viewBox="0 0 24 24">
+									<path
+										d="M4 5.5A1.5 1.5 0 015.5 4h13A1.5 1.5 0 0120 5.5v9a1.5 1.5 0 01-1.5 1.5H13l-4 4v-4H5.5A1.5 1.5 0 014 14.5v-9z"
+									/>
+								</svg>
+							</span>
+							<span class="link__tx">
+								<b>Repository</b>
+								<span>pyramid-farm-showcase</span>
+							</span>
+							<span class="link__arw" aria-hidden="true">
+								<svg viewBox="0 0 24 24">
+									<path d="M7 17L17 7M9 7h8v8" />
+								</svg>
+							</span>
+						</a>
+
+						<div class="link">
+							<span class="link__ic" aria-hidden="true">
+								<svg viewBox="0 0 24 24">
+									<path
+										d="M12 2a4 4 0 00-4 4v6a4 4 0 008 0V6a4 4 0 00-4-4zM6 11a6 6 0 0012 0h2a8 8 0 01-7 7.93V22h-2v-3.07A8 8 0 014 11h2z"
+									/>
+								</svg>
+							</span>
+							<span class="link__tx">
+								<b>Discord</b>
+								<span>mikael_a</span>
+							</span>
+						</div>
+
+						<div class="link">
+							<span class="link__ic" aria-hidden="true">
+								<svg viewBox="0 0 24 24">
+									<path d="M12 21s7-4.4 7-10V5.5l-7-2.5-7 2.5V11c0 5.6 7 10 7 10z" />
+								</svg>
+							</span>
+							<span class="link__tx">
+								<b>Based in</b>
+								<span>Tampere, Finland · UTC+2</span>
+							</span>
+						</div>
+					</div>
+
+					<div class="note" data-reveal="3">
+						<b>Response time:</b> Discord same day, GitHub within a couple of days.
+						English or Finnish both fine — B2+ means I'll understand, but I'll keep it
+						short either way.
+					</div>
 				</div>
 			</section>
 		</main>
 
-		<footer class="wrap foot">
-			<span>&copy; <span id="year">2026</span> Mikael Ahonen</span>
+		<footer class="shell foot">
+			<span class="mono">© <span id="year">2026</span> Mikael Ahonen</span>
+			<span class="mono">pyramid-farm · gui-v8-holdplace</span>
 			<span class="spacer"></span>
-			<a href="https://github.com/kr10x723/pyramid-farm-showcase">github.com/kr10x723/pyramid-farm-showcase</a>
+			<a href="#top">back to top ↑</a>
 		</footer>
 
 		<script src="script.js"></script>
