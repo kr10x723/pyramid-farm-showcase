@@ -3,14 +3,14 @@
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
-		<title>Mikael Ahonen — Automation Student &amp; Luau Client Dev</title>
+		<title>Mikael Ahonen — Pyramid Farm</title>
 		<meta
 			name="description"
-			content="Mikael Ahonen (mikael-a), 16, first-year electrical and industrial automation student at Tredu in Tampere. Pyramid Farm: a Luau client with a native sidebar HUD."
+			content="Mikael Ahonen, 16, electrical & industrial automation student at Tredu in Tampere. Pyramid Farm: a Luau client with a native sidebar HUD."
 		/>
 		<meta name="author" content="Mikael Ahonen" />
 		<meta name="color-scheme" content="dark" />
-		<meta name="theme-color" content="#090d16" />
+		<meta name="theme-color" content="#08060f" />
 		<meta property="og:type" content="website" />
 		<meta property="og:title" content="Mikael Ahonen — Pyramid Farm" />
 		<meta
@@ -20,18 +20,25 @@
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 		<link
-			href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+			href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
 			rel="stylesheet"
 		/>
 		<link rel="stylesheet" href="style.css" />
 		<link
 			rel="icon"
-			href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%23090d16'/%3E%3Cpath d='M16 7l7.5 13h-15z' fill='none' stroke='%237aa2f7' stroke-width='1.8' stroke-linejoin='round'/%3E%3C/svg%3E"
+			href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%2308060f'/%3E%3Cpath d='M18 4L9 18h6l-2 10 10-15h-6z' fill='%238b5cf6'/%3E%3C/svg%3E"
 		/>
 	</head>
 
 	<body>
 		<div class="progress" id="progress" aria-hidden="true"></div>
+
+		<!-- ambient layers -->
+		<div class="fx-canvas" id="fx-canvas" aria-hidden="true"><canvas></canvas></div>
+		<div class="blob blob--a" aria-hidden="true"></div>
+		<div class="blob blob--b" aria-hidden="true"></div>
+		<div class="blob blob--c" aria-hidden="true"></div>
+		<div class="sweep" aria-hidden="true"></div>
 
 		<a class="vh" href="#about">Skip to content</a>
 
@@ -52,9 +59,10 @@
 				</nav>
 
 				<div class="top__end">
-					<span class="loc">
-						<span class="beacon" aria-hidden="true"></span>
-						Tampere, FI
+					<span class="bus">
+						<span class="led" aria-hidden="true"></span>
+						<span class="bus__label">24 V</span>
+						<span class="bus__v" id="bus-v">24.0</span>
 					</span>
 					<span class="clocks" aria-label="UTC and Helsinki local time">
 						<span class="k">utc</span>
@@ -70,67 +78,70 @@
 			<section class="hero">
 				<div class="shell">
 					<div class="eyebrow" data-reveal="0">
-						<span class="live">available</span>
+						<span class="tag">panel online</span>
+						<span class="sep">/</span>
+						<span class="on">Tampere, FI</span>
 						<span class="sep">/</span>
 						<span id="utc-date">—</span>
-						<span class="sep">/</span>
-						<span>helsinki&nbsp;utc+2</span>
 					</div>
 
 					<h1 data-reveal="1">
-						Automation student.<br />
-						<em>Writes clients</em> <span class="thin">that hold up.</span>
+						Wiring panels<br />
+						by day. <span class="grad">Shipping clients</span>
+						<span class="dim">by night.</span>
 					</h1>
 
 					<p class="hero__lede" data-reveal="2">
-						I'm Mikael — <strong><span id="age-live">16</span>, first year</strong> of
-						electrical and industrial automation at Tredu's Pyynikki campus in
-						Tampere. Weekdays are PLC panels, sensors and wiring diagrams.
-						Weekends are Luau: game clients, framework internals, and dark UIs that
-						don't waste a frame. This page is one of them.
+						I'm Mikael — <b><span id="age-live">16</span>, first year</b> of electrical
+						and industrial automation at Tredu's Pyynikki campus. PLC programs, sensors,
+						relay logic all week. Luau clients, framework internals and interfaces that
+						don't waste a frame all weekend. This page is the second kind.
 					</p>
 
 					<div class="hero__acts" data-reveal="3">
 						<a class="btn btn--primary" href="#work">
 							<svg viewBox="0 0 24 24" aria-hidden="true">
-								<path d="M9 18l-6-6 6-6M15 6l6 6-6 6" />
+								<path d="M13 2L4.5 13H11l-1 9 8.5-11H12z" />
 							</svg>
 							Read the client
 						</a>
 						<a class="btn" href="#build">
 							<svg viewBox="0 0 24 24" aria-hidden="true">
-								<path d="M12 4v16M4 12h16" />
+								<path d="M12 3v18M5 8l7-5 7 5M5 16l7 5 7-5" />
 							</svg>
 							How it works
 						</a>
-						<a class="btn" href="https://github.com/kr10x723/pyramid-farm-showcase">
+						<a class="btn" href="#about">
 							<svg viewBox="0 0 24 24" aria-hidden="true">
-								<path
-									d="M9 19c-4 1.4-4-2.5-6-3m12 5v-3.9a3.4 3.4 0 00-.9-2.6c3-.3 6.2-1.5 6.2-6.7A5.2 5.2 0 0018 3.3a4.8 4.8 0 00-.1-3.6s-1.1-.3-3.6 1.4a12.3 12.3 0 00-6.6 0C5.1-.6 4 .3 4 .3A4.8 4.8 0 003.9 3.9 5.2 5.2 0 003 7.8c0 5.2 3.2 6.4 6.2 6.7a3.4 3.4 0 00-.9 2.6V20"
-								/>
+								<circle cx="12" cy="8" r="4" />
+								<path d="M4 21a8 8 0 0116 0" />
 							</svg>
-							Repository
+							About me
 						</a>
 					</div>
 
-					<dl class="strip" data-reveal="4">
-						<div>
-							<dt>Program</dt>
-							<dd class="v">Sähkö- ja otomaatioala <small>· yr 1</small></dd>
+					<div class="vitals" data-reveal="4">
+						<div class="vital">
+							<div class="k">program</div>
+							<div class="v">Sähkö- ja <small>otomaatioala</small></div>
+							<div class="sub">Tredu · Pyynikki · year 1</div>
 						</div>
-						<div>
-							<dt>Base</dt>
-							<dd class="v">Tampere <small>· Härmälä</small></dd>
+						<div class="vital">
+							<div class="k">bus voltage</div>
+							<div class="v"><span id="v-live">24.0</span><small>V DC</small></div>
+							<div class="sub">24 V control · live</div>
 						</div>
-						<div>
-							<dt>Languages</dt>
-							<dd class="v">FI <small>· EN B2+ · SV basic</small></dd>
+						<div class="vital">
+							<div class="k">panel uptime</div>
+							<div class="v"><span id="uptime">00:00</span><small>h</small></div>
+							<div class="sub">no faults recorded</div>
 						</div>
-						<div>
-							<dt>Contact</dt>
-							<dd class="v">GitHub / Discord <small>· short answers</small></dd>
+						<div class="vital">
+							<div class="k">build</div>
+							<div class="v">v8<small>holdplace</small></div>
+							<div class="sub">972 lines · luau</div>
 						</div>
-					</dl>
+					</div>
 				</div>
 			</section>
 
@@ -139,41 +150,37 @@
 				<div class="sec__rail" data-reveal="0">
 					<div class="sec__num">01 / about</div>
 					<h2>Who you're looking at</h2>
-					<p>
-						Short version up top, details if you actually care.
-					</p>
+					<p>Short version first, details if you actually care.</p>
 				</div>
 
 				<div class="sec__body">
 					<div class="prose" data-reveal="1">
 						<p>
-							I'm a 16-year-old vocational student in Tampere, Finland. First
-							year of <strong>Sähkö- ja otomaatioala</strong> — electrical and
-							industrial automation technology — at Tredu, Pyynikki campus. My
-							weekday is panels, contactors, sensors and PLC programs; my
-							weeknight is Lua and dark interfaces.
+							I'm a 16-year-old vocational student in Tampere. First year of
+							<b>Sähkö- ja otomaatioala</b> — electrical and industrial automation
+							technology — at Tredu, Pyynikki campus. My weekday is panels, contactors,
+							sensors and PLC programs. My weeknight is Lua and interfaces.
 						</p>
 						<p>
-							I'm not going to tell you I "revolutionise" anything. I like things
-							that work, load fast, and don't phone home. If a feature works, I
-							don't decorate it. If code runs, I don't rewrite it for style points.
-							Most of what I publish is the actual file, unmodified, because a
-							repo that only shows screenshots is a brochure, not work.
+							I don't tell you I "revolutionise" anything. I like things that work,
+							load fast, and don't phone home. If a feature works, I don't decorate
+							it. If code runs, I don't rewrite it for style points. Most of what I
+							publish is the actual file, unmodified, because a repo with only
+							screenshots is a brochure, not work.
 						</p>
 						<p>
-							On the internet I'm <strong>mikael-a</strong>. No X, no Instagram
-							posts — a private account for school friends and that's it. Discord
-							as <code>mikael_a</code>, mostly lurking in script channels. On GitHub
-							you'll find Luau clients and framework spelunking. If you ask me
-							something technical, I'll answer it directly. I won't pad the reply.
+							On the internet I'm <b>mikael-a</b>. No X, no posting — a private account
+							for school friends and that's it. Discord as <code>mikael_a</code>,
+							mostly in script channels. GitHub gets the Luau clients. Ask me
+							something technical and I'll answer it directly. No padding.
 						</p>
 					</div>
 
 					<div class="note" data-reveal="2">
-						<b>Note on the aesthetic:</b> no neon gradients, no "AI slop" hero
-						sections, no fake testimonials. A hairline grid, one accent, and a
-						readable code block. Everything here is hand-written CSS — 0&nbsp;KB of
-						framework.
+						<b>On the visual:</b> yes, it glows. Blurple gradients, glass panels,
+						a circuit schematic with current actually flowing through it. I mocked this
+						up as a joke and then realised it's exactly the 0toinf Discord theme my
+						entire generation lives in, so I kept it. Panels and pixels, same thing.
 					</div>
 
 					<dl class="dl" data-reveal="3">
@@ -183,26 +190,20 @@
 						</div>
 						<div>
 							<dt>Born</dt>
-							<dd>
-								14 March 2010 <span class="mut">· <span class="age">16</span> years old</span>
-							</dd>
+							<dd>14 March 2010 <span class="mut">· <span class="age">16</span> years old</span></dd>
 						</div>
 						<div>
-							<dt>Residence</dt>
-							<dd>
-								Tampere, Finland <span class="mut">· apartment near Härmälä</span>
-							</dd>
+							<dt>Lives</dt>
+							<dd>Tampere, Finland <span class="mut">· apartment near Härmälä</span></dd>
 						</div>
 						<div>
 							<dt>School</dt>
-							<dd>
-								Tredu, Pyynikki campus <span class="mut">· Tampere Vocational College</span>
-							</dd>
+							<dd>Tredu, Pyynikki <span class="mut">· Tampere Vocational College</span></dd>
 						</div>
 						<div>
 							<dt>Field</dt>
 							<dd>
-								Electrical &amp; Industrial Automation Technology
+								Electrical &amp; Industrial Automation
 								<span class="mut">· 1st year student</span>
 							</dd>
 						</div>
@@ -216,13 +217,13 @@
 						</div>
 						<div>
 							<dt>Build</dt>
-							<dd>1.78 m, on the lean side. Classic Nerd posture. Dark blond, blue-grey eyes.</dd>
+							<dd>1.78 m, lean. Classic Nerd posture. Dark blond, blue-grey eyes.</dd>
 						</div>
 						<div>
 							<dt>Uniform</dt>
 							<dd>
 								Charcoal hoodie, plain tee, work trousers. Safety boots and a navy
-								Tredu-branded jacket in the workshop.
+								Tredu jacket in the workshop.
 							</dd>
 						</div>
 						<div>
@@ -237,69 +238,39 @@
 			<section class="sec shell" id="focus">
 				<div class="sec__rail" data-reveal="0">
 					<div class="sec__num">02 / focus</div>
-					<h2>Two tracks, one mindset</h2>
-					<p>
-						Same brain, different voltage.
-					</p>
+					<h2>Two circuits</h2>
+					<p>Same brain, different voltage.</p>
 				</div>
 
 				<div class="sec__body">
 					<div class="split" data-reveal="1">
 						<div class="panel">
 							<header>
-								Weekdays · Tredu
+								<span class="led led--amber" aria-hidden="true"></span>
+								weekdays · Tredu
 								<span class="pill">physical</span>
 							</header>
 							<ul>
-								<li>
-									<span class="b">PLC</span>
-									<span>Programming ladder &amp; structured text, diagnostics</span>
-								</li>
-								<li>
-									<span class="b">Panels</span>
-									<span>Assembly, wiring, terminal blocks, labelling</span>
-								</li>
-								<li>
-									<span class="b">Sensors</span>
-									<span>Proximity, photo-eye, inductive — wiring &amp; tuning</span>
-								</li>
-								<li>
-									<span class="b">Circuits</span>
-									<span>Relays, contactors, 24 V DC control loops</span>
-								</li>
-								<li>
-									<span class="b">Safety</span>
-									<span>E-stop circuits, guarding, workshop discipline</span>
-								</li>
+								<li><span class="b">PLC</span><span>Ladder &amp; structured text, diagnostics</span></li>
+								<li><span class="b">Panels</span><span>Assembly, wiring, terminals, labelling</span></li>
+								<li><span class="b">Sensors</span><span>Proximity, photo-eye, inductive — tuning</span></li>
+								<li><span class="b">Relays</span><span>Contactors, 24 V DC control loops</span></li>
+								<li><span class="b">Safety</span><span>E-stop circuits, guarding, discipline</span></li>
 							</ul>
 						</div>
 
 						<div class="panel">
 							<header>
-								Nights · Weekend
+								<span class="led" aria-hidden="true"></span>
+								nights · weekend
 								<span class="pill">software</span>
 							</header>
 							<ul>
-								<li>
-									<span class="b">Luau</span>
-									<span>Game clients, state polling, remote-aware loops</span>
-								</li>
-								<li>
-									<span class="b">Knit</span>
-									<span>Framework internals, service lifecycle, remotes</span>
-								</li>
-								<li>
-									<span class="b">Web</span>
-									<span>Minimal dark UIs — this page is the reference</span>
-								</li>
-								<li>
-									<span class="b">Perf</span>
-									<span>Heartbeat budgets, avoiding per-frame allocation</span>
-								</li>
-								<li>
-									<span class="b">Games</span>
-									<span>CS2 or Valheim with friends, occasionally</span>
-								</li>
+								<li><span class="b b--c">Luau</span><span>Game clients, state polling, remotes</span></li>
+								<li><span class="b b--c">Knit</span><span>Service lifecycle, framework internals</span></li>
+								<li><span class="b b--c">Web</span><span>Dark UIs — this page is the reference</span></li>
+								<li><span class="b b--c">Perf</span><span>Heartbeat budgets, zero per-frame allocation</span></li>
+								<li><span class="b b--c">Games</span><span>CS2 or Valheim, occasionally</span></li>
 							</ul>
 						</div>
 					</div>
@@ -308,50 +279,165 @@
 						<div class="card">
 							<div class="k">engineering brain</div>
 							<h3>If it works, don't decorate it</h3>
-							<p>
-								Same rule in a cabinet and in a codebase. <b>Works, is legible,
-								doesn't leak</b> — that's the whole bar.
-							</p>
+							<p>Same rule in a cabinet and in a codebase. <b>Works, legible, doesn't leak</b> — that's the bar.</p>
 						</div>
 						<div class="card">
 							<div class="k">communication</div>
 							<h3>Short, direct, on topic</h3>
-							<p>
-								Discord or GitHub, one to three lines. <b>No marketing voice</b>, no
-								"revolutionary", no "cutting-edge".
-							</p>
+							<p>Discord or GitHub, one to three lines. <b>No marketing voice.</b> Never "revolutionary".</p>
 						</div>
 						<div class="card">
-							<div class="k">taste</div>
-							<h3>Obsidian, hairlines, mono</h3>
-							<p>
-								One accent, a 1px grid, Inter plus JetBrains Mono. <b>Restraint
-								reads as competence</b> — clutter reads as noise.
-							</p>
+							<div class="k">aesthetic</div>
+							<h3>Glow, but earned</h3>
+							<p>Every light on this page means something. <b>Blurple glass, current, no confetti.</b></p>
 						</div>
 						<div class="card">
 							<div class="k">shipping</div>
 							<h3>The file, not the mockup</h3>
-							<p>
-								A repo with screenshots is marketing. <b>A repo with the source is
-								evidence.</b> This one is the source.
-							</p>
+							<p>A repo with screenshots is marketing. <b>A repo with the source is evidence.</b></p>
 						</div>
 					</div>
 
 					<div class="stack" data-reveal="3" aria-label="Tools and interests">
-						<span><i>▸</i>Luau</span>
-						<span><i>▸</i>Roblox</span>
-						<span><i>▸</i>Knit</span>
-						<span><i>▸</i>Vanilla JS</span>
-						<span><i>▸</i>CSS Grid</span>
-						<span><i>▸</i>Siemens LOGO!</span>
-						<span><i>▸</i>Automation Studio</span>
-						<span><i>▸</i>PLC ladder</span>
-						<span><i>▸</i>Linux / Arch</span>
-						<span><i>▸</i>Git</span>
-						<span><i>▸</i>Figma</span>
-						<span><i>▸</i>KiCad</span>
+						<span><i>◆</i>Luau</span>
+						<span><i>◆</i>Knit</span>
+						<span><i>◆</i>Vanilla JS</span>
+						<span><i>◆</i>CSS Grid</span>
+						<span><i>◆</i>Siemens LOGO!</span>
+						<span><i>◆</i>Automation Studio</span>
+						<span><i>◆</i>PLC ladder</span>
+						<span><i>◆</i>Omron</span>
+						<span><i>◆</i>KiCad</span>
+						<span><i>◆</i>Linux / Arch</span>
+						<span><i>◆</i>Git</span>
+						<span><i>◆</i>Figma</span>
+					</div>
+				</div>
+			</section>
+
+			<!-- ============================ circuit ============================ -->
+			<section class="sec shell" id="circuit">
+				<div class="sec__rail" data-reveal="0">
+					<div class="sec__num">03 / circuit</div>
+					<h2>Ohm's law, actually wired</h2>
+					<p>Drag the sliders. The current responds, because Ohm doesn't care about your gradient.</p>
+				</div>
+
+				<div class="sec__body">
+					<div class="prose" data-reveal="1">
+						<p>
+							This is the part of the page that's actually mine. A 24&nbsp;V supply,
+							one resistor, one LED. Move the <b>voltage</b> and the <b>resistance</b>
+							and the current through the loop changes, the LED brightness follows the
+							forward voltage, and if you dissipate more than a quarter watt in a
+							quarter-watt resistor it turns amber and tells you so. Ohm's law is
+							indifferent to aesthetics.
+						</p>
+					</div>
+
+					<div class="lab" data-reveal="2">
+						<div class="lab__bar">
+							<span class="led" aria-hidden="true"></span>
+							<b>BENCH-01</b>
+							<span>24 V DC · series loop</span>
+							<span class="spacer"></span>
+							<span id="lab-power">0.00 W</span>
+						</div>
+
+						<div class="lab__grid">
+							<div class="lab__ctrl">
+								<div class="ctl">
+									<label for="c-v">supply <b id="v-out">12.0 V</b></label>
+									<input type="range" id="c-v" min="0" max="24" step="0.5" value="12" />
+								</div>
+								<div class="ctl">
+									<label for="c-r">resistor <b id="r-out">470 Ω</b></label>
+									<input type="range" id="c-r" min="47" max="2200" step="1" value="470" />
+								</div>
+								<div class="ctl">
+									<label for="c-w">resistor rating <b id="w-out">0.5 W</b></label>
+									<input type="range" id="c-w" min="0" max="4" step="1" value="1" />
+								</div>
+
+								<div class="readouts">
+									<div class="ro">
+										<div class="k">current</div>
+										<div class="v"><span id="i-out">0</span><small>mA</small></div>
+									</div>
+									<div class="ro">
+										<div class="k">resistor heat</div>
+										<div class="v"><span id="p-out">0.00</span><small>W</small></div>
+									</div>
+									<div class="ro">
+										<div class="k">loop drop</div>
+										<div class="v"><span id="vd-out">0.00</span><small>V</small></div>
+									</div>
+									<div class="ro">
+										<div class="k">headroom</div>
+										<div class="v"><span id="hr-out">0.00</span><small>V</small></div>
+									</div>
+								</div>
+
+								<div class="verdict" id="verdict">Adjust the supply to see the loop close.</div>
+							</div>
+
+							<div class="schem">
+								<svg viewBox="0 0 600 320" role="img" aria-label="Series circuit: 24 volt supply, resistor and LED">
+									<defs>
+										<linearGradient id="flowGrad" x1="0" y1="0" x2="1" y2="0">
+											<stop offset="0%" stop-color="#22d3ee" />
+											<stop offset="55%" stop-color="#8b5cf6" />
+											<stop offset="100%" stop-color="#ec4899" />
+										</linearGradient>
+										<radialGradient id="ledGlowGrad">
+											<stop offset="0%" stop-color="#fecdd3" stop-opacity="0.9" />
+											<stop offset="100%" stop-color="#fb7185" stop-opacity="0" />
+										</radialGradient>
+									</defs>
+
+									<!-- supply rail -->
+									<path class="wire" d="M80 70 H300" />
+									<path class="wire" d="M80 70 V250" />
+									<path class="wire" d="M80 250 H300" />
+									<path class="wire" d="M380 250 H540" />
+									<path class="wire" d="M540 250 V70" />
+									<path class="wire" d="M380 70 H540" />
+									<path class="wire" d="M300 70 V110" />
+									<path class="wire" d="M300 210 V250" />
+
+									<!-- animated current -->
+									<path class="wire-flow" d="M80 250 H300 V110" style="--flow-dur:1.6s" />
+									<path class="wire-flow" d="M300 70 H540 V250 H380 V210" style="--flow-dur:1.6s" />
+
+									<!-- supply symbol -->
+									<line class="wire" x1="150" y1="106" x2="150" y2="214" stroke-width="3" />
+									<line class="wire" x1="186" y1="128" x2="186" y2="192" stroke-width="2" />
+									<circle class="node" cx="168" cy="160" r="3" />
+									<text class="part-label" x="168" y="236" text-anchor="middle">PSU</text>
+									<text class="value-label" x="168" y="88" text-anchor="middle" id="svg-v">12.0 V</text>
+
+									<!-- resistor -->
+									<path
+										class="res-body"
+										id="res-path"
+										d="M262 110 L272 98 L286 122 L300 98 L314 122 L328 98 L338 110"
+									/>
+									<text class="part-label" x="300" y="152" text-anchor="middle">R1</text>
+									<text class="value-label" x="300" y="86" text-anchor="middle" id="svg-r">330 Ω</text>
+
+									<!-- LED -->
+									<path class="led-on" id="led-tri" d="M356 88 L356 132 L392 110 Z" style="--led-glow:2px" />
+									<line class="led-on" id="led-bar" x1="398" y1="88" x2="398" y2="132" stroke-width="2.4" />
+									<circle id="led-aura" cx="378" cy="110" r="40" fill="url(#ledGlowGrad)" opacity="0" />
+									<text class="part-label" x="378" y="152" text-anchor="middle">LED1</text>
+									<text class="value-label" x="440" y="114" id="svg-i">0.0 mA</text>
+
+									<!-- meter tick -->
+									<circle class="node" cx="540" cy="160" r="4" />
+									<text class="node-label" x="540" y="182" text-anchor="middle">A</text>
+								</svg>
+							</div>
+						</div>
 					</div>
 				</div>
 			</section>
@@ -359,21 +445,18 @@
 			<!-- ============================ rig ============================ -->
 			<section class="sec shell" id="rig">
 				<div class="sec__rail" data-reveal="0">
-					<div class="sec__num">03 / setup</div>
-					<h2>Where it happens</h2>
-					<p>
-						Small, tidy room in Tampere. Cables taped where they have to be, not
-						where they look nice.
-					</p>
+					<div class="sec__num">04 / setup</div>
+					<h2>Bench &amp; desk</h2>
+					<p>Small tidy room in Tampere. Cables taped where they must be, not where they look nice.</p>
 				</div>
 
 				<div class="sec__body">
 					<div class="rig" data-reveal="1">
 						<div class="rig__desk">
 							<div class="rig__slot">
-								<div class="label">Display</div>
+								<div class="label">display</div>
 								<div class="item">
-									<div class="nm">Dell 1080p, portrait</div>
+									<div class="nm">Dell 1080p · portrait</div>
 									<div class="ds">vertical · code reading</div>
 								</div>
 								<div class="item">
@@ -382,7 +465,7 @@
 								</div>
 							</div>
 							<div class="rig__slot">
-								<div class="label">Input</div>
+								<div class="label">input</div>
 								<div class="item">
 									<div class="nm">Mechanical keyboard</div>
 									<div class="ds">silent tactile switches</div>
@@ -393,7 +476,7 @@
 								</div>
 							</div>
 							<div class="rig__slot">
-								<div class="label">Hardware</div>
+								<div class="label">hardware</div>
 								<div class="item">
 									<div class="nm">ThinkPad · dark grey</div>
 									<div class="ds">second-hand · small Arch sticker</div>
@@ -408,9 +491,9 @@
 							<span class="tagx">synthwave</span>
 							<span class="tagx">ambient</span>
 							<span class="tagx">spotify</span>
-							<span class="tagx">closed account, private instagram</span>
-							<span class="tagx">no x / twitter</span>
+							<span class="tagx">private instagram, no x</span>
 							<span class="tagx">classic black backpack</span>
+							<span class="tagx">safety boots at school</span>
 						</div>
 					</div>
 
@@ -418,26 +501,17 @@
 						<div class="card">
 							<div class="k">daily carry</div>
 							<h3>Boring on purpose</h3>
-							<p>
-								Plain tee, hoodie, work jeans, safety boots in the workshop.
-								<b>No brand fixation.</b> Nothing to coordinate.
-							</p>
+							<p>Plain tee, hoodie, work jeans. <b>No brand fixation.</b> Nothing to coordinate.</p>
 						</div>
 						<div class="card">
 							<div class="k">unwind</div>
 							<h3>CS2, Valheim, noise</h3>
-							<p>
-								Occasional games with friends. <b>Dark synthwave or ambient</b>
-								while the terminal does its thing.
-							</p>
+							<p>Games with friends. <b>Dark synthwave or ambient</b> while the terminal runs.</p>
 						</div>
 						<div class="card">
 							<div class="k">desk rule</div>
-							<h3>Practical over pretty</h3>
-							<p>
-								One corner for the multimeter and relays, one for the laptop.
-								<b>Tape, don't hide.</b>
-							</p>
+							<h3>Tape, don't hide</h3>
+							<p>One corner for multimeter and relays, one for the laptop. <b>Practical over pretty.</b></p>
 						</div>
 					</div>
 				</div>
@@ -446,107 +520,51 @@
 			<!-- ============================ build ============================ -->
 			<section class="sec shell" id="build">
 				<div class="sec__rail" data-reveal="0">
-					<div class="sec__num">04 / build</div>
-					<h2>Pyramid Farm, in the open</h2>
-					<p>
-						The reason this page exists. Full file below, no redactions.
-					</p>
+					<div class="sec__num">05 / build</div>
+					<h2>Pyramid Farm</h2>
+					<p>The reason this page exists. Full file below, no redactions.</p>
 				</div>
 
 				<div class="sec__body">
 					<div class="prose" data-reveal="1">
 						<p>
-							<strong>Pyramid Farm</strong> is a client for a Roblox quarry-and-pyramid
-							loop. It polls the game's own replicated state, resolves a valid
-							placement slot next to the player, carries books over, and places them.
-							Then it draws a sidebar HUD so you can see what it's doing without
-							leaving the game.
+							<b>Pyramid Farm</b> is a client for a Roblox quarry-and-pyramid loop. It
+							polls the game's own replicated state, resolves a valid placement slot next
+							to the player, carries books over, and places them. Then it draws a sidebar
+							HUD so you can watch it without leaving the game.
 						</p>
 						<p>
-							The interesting part isn't the loop — it's the <code>pcall</code>
-							discipline. Every service lookup, module require and remote call is
-							guarded. If the game updates and a module moves, the client degrades
-							to a status string instead of erroring into the void.
+							The loop itself is the easy part. The interesting part is the
+							<code>pcall</code> discipline — every service lookup, module require and
+							remote call is guarded. If the game updates and a module moves, it
+							degrades to a status string instead of erroring into the void.
 						</p>
 					</div>
 
 					<div class="cards" data-reveal="2">
-						<div class="card card--num">
-							<div class="n">01</div>
-							<h3>Canonical state</h3>
-							<p>
-								Carry count goes through <b>CarryState.read</b> with a 250&nbsp;ms
-								cache, falling back to the encoded <code>CarryState</code> attribute.
-								One source of truth, never two.
-							</p>
-						</div>
-						<div class="card card--num">
-							<div class="n">02</div>
-							<h3>Two placement paths</h3>
-							<p>
-								If the interaction runtime exposes <b>beginPlaceHold</b> it drives a
-								continuous hold; otherwise it falls back to per-slot RPCs with a
-								cached slot index.
-							</p>
-						</div>
-						<div class="card card--num">
-							<div class="n">03</div>
-							<h3>Never assumes</h3>
-							<p>
-								Services, modules and RPCs are all wrapped. <b>A missing module is a
-								status string</b>, not a crash.
-							</p>
-						</div>
-						<div class="card card--num">
-							<div class="n">04</div>
-							<h3>Window awareness</h3>
-							<p>
-								The multiplier pool is tracked as a live timer. The loop <b>parks in
-								it</b> while active, resumes the farm when it closes.
-							</p>
-						</div>
-						<div class="card card--num">
-							<div class="n">05</div>
-							<h3>Legible HUD</h3>
-							<p>
-								Status, carry, collected, pool and a rolling three-line log — all
-								repainted on <b>Heartbeat</b>, no per-frame allocation.
-							</p>
-						</div>
-						<div class="card card--num">
-							<div class="n">06</div>
-							<h3>Drag &amp; collapse</h3>
-							<p>
-								The sidebar clamps to the viewport on drag and <b>folds to its
-								52&nbsp;px header</b> so it never eats the screen.
-							</p>
-						</div>
+						<div class="card"><div class="n">01</div><h3>Canonical state</h3><p>Carry count via <b>CarryState.read</b>, 250&nbsp;ms cache, falls back to the encoded attribute. One source of truth.</p></div>
+						<div class="card"><div class="n">02</div><h3>Two placement paths</h3><p>If the runtime exposes <b>beginPlaceHold</b> it drives a continuous hold; else per-slot RPCs with a cached index.</p></div>
+						<div class="card"><div class="n">03</div><h3>Never assumes</h3><p>Services, modules, RPCs — all wrapped. <b>A missing module is a status string</b>, not a crash.</p></div>
+						<div class="card"><div class="n">04</div><h3>Window awareness</h3><p>The multiplier pool is a live timer. The loop <b>parks in it</b> while active, resumes when it closes.</p></div>
+						<div class="card"><div class="n">05</div><h3>Legible HUD</h3><p>Status, carry, collected, pool, three-line log — repainted on <b>Heartbeat</b>, no per-frame allocation.</p></div>
+						<div class="card"><div class="n">06</div><h3>Drag &amp; collapse</h3><p>Sidebar clamps to viewport on drag and <b>folds to its 52&nbsp;px header</b> so it never eats the screen.</p></div>
 					</div>
 
 					<div class="tl" data-reveal="3">
 						<div class="tl__item">
 							<div class="tl__when">state polling → pooled → looped</div>
 							<div class="tl__what"><b>Pick phase</b> → place phase</div>
-							<div class="tl__note">
-								The outer loop reads carry, checks pyramid completion, then
-								dispatches. Cheap check, one branch.
-							</div>
+							<div class="tl__note">Outer loop reads carry, checks completion, dispatches. One branch, cheap.</div>
 						</div>
 						<div class="tl__item">
 							<div class="tl__when">every heartbeat</div>
 							<div class="tl__what"><b>Repaint</b> five labels, three log lines</div>
-							<div class="tl__note">
-								Cheap by design. If repainting cost more than the work it reported,
-								the HUD would be the bug.
-							</div>
+							<div class="tl__note">If repainting cost more than the work it reported, the HUD would be the bug.</div>
 						</div>
 						<div class="tl__item is-now">
 							<div class="tl__when">current build</div>
 							<div class="tl__what"><b>gui-v8-holdplace</b></div>
-							<div class="tl__note">
-								Hold-based placement is the active path. RPC fallback retained
-								for older runtimes.
-							</div>
+							<div class="tl__note">Hold-based placement is active. RPC fallback retained for older runtimes.</div>
 						</div>
 					</div>
 				</div>
@@ -555,11 +573,9 @@
 			<!-- ============================ source ============================ -->
 			<section class="sec shell" id="work">
 				<div class="sec__rail" data-reveal="0">
-					<div class="sec__num">05 / source</div>
+					<div class="sec__num">06 / source</div>
 					<h2>The whole file</h2>
-					<p>
-						972 lines, unmodified. Search it, wrap it, copy it.
-					</p>
+					<p>972 lines, unmodified. Search it, wrap it, copy it.</p>
 				</div>
 
 				<div class="sec__body">
@@ -577,28 +593,19 @@
 										<circle cx="11" cy="11" r="7" />
 										<path d="M20 20l-4.2-4.2" />
 									</svg>
-									<input
-										id="code-search"
-										type="search"
-										placeholder="find in file"
-										aria-label="Find in file"
-										autocomplete="off"
-										spellcheck="false"
-									/>
+									<input id="code-search" type="search" placeholder="find in file" aria-label="Find in file" autocomplete="off" spellcheck="false" />
 									<kbd>/</kbd>
 								</span>
-								<button class="tgl" id="wrap-btn" type="button" aria-pressed="false">
-									wrap
-								</button>
+								<button class="tgl" id="wrap-btn" type="button" aria-pressed="false">wrap</button>
 								<button class="tgl" id="copy-btn" type="button"><span>copy</span></button>
 							</span>
 						</div>
 
 						<div class="vw__stats">
-						<span id="vw-stats"></span>
-						<span class="spacer"></span>
-						<span id="vw-hits"></span>
-					</div>
+							<span id="vw-stats"></span>
+							<span class="spacer"></span>
+							<span id="vw-hits"></span>
+						</div>
 
 						<pre class="code" id="code-scroll" tabindex="0"><code id="source"><span class="row"> </span>
 <span class="row"><span class="t-kw">local</span> Players <span class="t-op">=</span> game:<span class="t-fn">GetService</span>(<span class="t-str">"Players"</span>)</span>
@@ -1575,10 +1582,9 @@
 					</div>
 
 					<div class="note" data-reveal="2">
-						<b>Fair warning:</b> this is a client for someone else's game. If you
-						use it, that's between you and Roblox's ToS, not between you and me. I've
-						published it because the code is the interesting part — not as an
-						invitation.
+						<b>Fair warning:</b> this is a client for someone else's game. If you use
+						it, that's between you and Roblox's ToS, not between you and me. Published
+						because the code is the interesting part — not as an invitation.
 					</div>
 				</div>
 			</section>
@@ -1586,7 +1592,7 @@
 			<!-- ============================ contact ============================ -->
 			<section class="sec shell" id="contact">
 				<div class="sec__rail" data-reveal="0">
-					<div class="sec__num">06 / contact</div>
+					<div class="sec__num">07 / contact</div>
 					<h2>Reach me</h2>
 					<p>GitHub or Discord. Expect short answers.</p>
 				</div>
@@ -1594,84 +1600,39 @@
 				<div class="sec__body">
 					<div class="prose" data-reveal="1">
 						<p>
-							Questions about a specific line, a bug in something I wrote, or a
-							Luau pattern you want a second opinion on — go ahead. School project
-							advice: also fine. I don't answer DMs from accounts selling things.
+							Questions about a specific line, a bug in something I wrote, or a Luau
+							pattern you want a second opinion on — go ahead. School project advice:
+							also fine. I don't answer DMs from accounts selling things.
 						</p>
 					</div>
 
 					<div class="links" data-reveal="2">
-						<a
-							class="link"
-							href="https://github.com/kr10x723/pyramid-farm-showcase"
-						>
-							<span class="link__ic" aria-hidden="true">
-								<svg viewBox="0 0 24 24">
-									<path
-										d="M12 2a10 10 0 00-3.16 19.49c.5.09.68-.22.68-.48l-.01-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.9-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.5 9.5 0 015 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.94.36.31.68.92.68 1.85l-.01 2.75c0 .27.18.58.69.48A10 10 0 0012 2z"
-									/>
-								</svg>
-							</span>
-							<span class="link__tx">
-								<b>GitHub</b>
-								<span>@kr10x723</span>
-							</span>
-							<span class="link__arw" aria-hidden="true">
-								<svg viewBox="0 0 24 24">
-									<path d="M7 17L17 7M9 7h8v8" />
-								</svg>
-							</span>
+						<a class="link" href="https://github.com/kr10x723/pyramid-farm-showcase">
+							<span class="link__ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 00-3.16 19.49c.5.09.68-.22.68-.48l-.01-1.7c-2.78.6-3.37-1.34-3.37-1.34-.45-1.16-1.11-1.47-1.11-1.47-.9-.62.07-.61.07-.61 1 .07 1.53 1.03 1.53 1.03.9 1.52 2.34 1.08 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.56-1.11-4.56-4.94 0-1.09.39-1.98 1.03-2.68-.1-.25-.45-1.27.1-2.65 0 0 .84-.27 2.75 1.02a9.5 9.5 0 015 0c1.91-1.29 2.75-1.02 2.75-1.02.55 1.38.2 2.4.1 2.65.64.7 1.03 1.59 1.03 2.68 0 3.84-2.34 4.69-4.57 4.94.36.31.68.92.68 1.85l-.01 2.75c0 .27.18.58.69.48A10 10 0 0012 2z"/></svg></span>
+							<span class="link__tx"><b>GitHub</b><span>@kr10x723</span></span>
+							<span class="link__arw" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></svg></span>
 						</a>
 
 						<a class="link" href="https://github.com/kr10x723/pyramid-farm-showcase">
-							<span class="link__ic" aria-hidden="true">
-								<svg viewBox="0 0 24 24">
-									<path
-										d="M4 5.5A1.5 1.5 0 015.5 4h13A1.5 1.5 0 0120 5.5v9a1.5 1.5 0 01-1.5 1.5H13l-4 4v-4H5.5A1.5 1.5 0 014 14.5v-9z"
-									/>
-								</svg>
-							</span>
-							<span class="link__tx">
-								<b>Repository</b>
-								<span>pyramid-farm-showcase</span>
-							</span>
-							<span class="link__arw" aria-hidden="true">
-								<svg viewBox="0 0 24 24">
-									<path d="M7 17L17 7M9 7h8v8" />
-								</svg>
-							</span>
+							<span class="link__ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3v18M6 7l6-4 6 4M6 13l6 4 6-4M6 19l6-4 6 4"/></svg></span>
+							<span class="link__tx"><b>Repository</b><span>pyramid-farm-showcase</span></span>
+							<span class="link__arw" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 17L17 7M9 7h8v8"/></svg></span>
 						</a>
 
 						<div class="link">
-							<span class="link__ic" aria-hidden="true">
-								<svg viewBox="0 0 24 24">
-									<path
-										d="M12 2a4 4 0 00-4 4v6a4 4 0 008 0V6a4 4 0 00-4-4zM6 11a6 6 0 0012 0h2a8 8 0 01-7 7.93V22h-2v-3.07A8 8 0 014 11h2z"
-									/>
-								</svg>
-							</span>
-							<span class="link__tx">
-								<b>Discord</b>
-								<span>mikael_a</span>
-							</span>
+							<span class="link__ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5.5A1.5 1.5 0 015.5 4h13A1.5 1.5 0 0120 5.5v9a1.5 1.5 0 01-1.5 1.5H13l-4 4v-4H5.5A1.5 1.5 0 014 14.5v-9z"/></svg></span>
+							<span class="link__tx"><b>Discord</b><span>mikael_a</span></span>
 						</div>
 
 						<div class="link">
-							<span class="link__ic" aria-hidden="true">
-								<svg viewBox="0 0 24 24">
-									<path d="M12 21s7-4.4 7-10V5.5l-7-2.5-7 2.5V11c0 5.6 7 10 7 10z" />
-								</svg>
-							</span>
-							<span class="link__tx">
-								<b>Based in</b>
-								<span>Tampere, Finland · UTC+2</span>
-							</span>
+							<span class="link__ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M13 2L4.5 13H11l-1 9 8.5-11H12z"/></svg></span>
+							<span class="link__tx"><b>Based in</b><span>Tampere, Finland · UTC+2</span></span>
 						</div>
 					</div>
 
 					<div class="note" data-reveal="3">
 						<b>Response time:</b> Discord same day, GitHub within a couple of days.
-						English or Finnish both fine — B2+ means I'll understand, but I'll keep it
+						English or Finnish, both fine — B2+ means I'll understand, but I'll keep it
 						short either way.
 					</div>
 				</div>
@@ -1679,8 +1640,8 @@
 		</main>
 
 		<footer class="shell foot">
-			<span class="mono">© <span id="year">2026</span> Mikael Ahonen</span>
-			<span class="mono">pyramid-farm · gui-v8-holdplace</span>
+			<span>© <span id="year">2026</span> Mikael Ahonen</span>
+			<span>pyramid-farm · gui-v8-holdplace</span>
 			<span class="spacer"></span>
 			<a href="#top">back to top ↑</a>
 		</footer>
